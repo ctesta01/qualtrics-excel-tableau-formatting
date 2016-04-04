@@ -1,4 +1,3 @@
-Blocks <- Blocks[[1]]$Payload
 
 entries = list()
 e = 0
@@ -10,21 +9,25 @@ for (i in 1:length(Blocks)) {
         for (k in 1:length(Blocks[[i]]$BlockElements[[j]]$Responses)) {
           e = e + 1
           qtype = ""
+
+          # make sure that subselector is defined
+          if (is.null(Blocks[[i]]$BlockElements[[j]]$Payload$SubSelector)) {
+            Blocks[[i]]$BlockElements[[j]]$Payload$SubSelector <- ""
+          }
+
+          # setting qtype
           if (is_multiple_choice(Blocks[[i]]$BlockElements[[j]])) {
             qtype = "Check All"
           } else if (is_single_answer(Blocks[[i]]$BlockElements[[j]])) {
             qtype = "Single Answer"
           } else if (is_rank_order(Blocks[[i]]$BlockElements[[j]])) {
             qtype = "Rank Order"
+          } else if (is_text_entry(Blocks[[i]]$BlockElements[[j]])) {
+            qtype = "Text Entry"
           } else {
             qtype = ""
           }
 
-          if (is.null(Blocks[[i]]$BlockElements[[j]]$Payload$SubSelector)) {
-            subselector = ""
-          } else {
-            subselector = Blocks[[i]]$BlockElements[[j]]$Payload$SubSelector
-          }
 
           entry <- c(
           # response column name
@@ -40,7 +43,7 @@ for (i in 1:length(Blocks)) {
           # qualtrics question selector
           Blocks[[i]]$BlockElements[[j]]$Payload$Selector,
           # qualtrics question subselector
-          subselector,
+          Blocks[[i]]$BlockElements[[j]]$Payload$SubSelector,
           # question column type
           qtype
           )

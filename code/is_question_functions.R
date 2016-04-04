@@ -29,7 +29,7 @@ is_single_answer <- function(x) {
          x$Payload$Selector == "SB")) ||
          (x$Payload$QuestionType == "Matrix" && (
            x$Payload$SubSelector == "DL" ||
-           x$Payload$SubSelector == "Bipolar" ||
+           x$Payload$Selector == "Bipolar" ||
            x$Payload$SubSelector == "SingleAnswer"
            ))
 
@@ -38,4 +38,12 @@ is_single_answer <- function(x) {
 
 is_rank_order <- function(x) {
   return(x$Payload$QuestionType == "RO")
+}
+
+is_text_entry <- function(x) {
+  return(x$Payload$QuestionType == "TE")
+}
+
+is_matrix_question <- function(x) {
+  return(x$Payload$QuestionType == "Matrix")
 }
