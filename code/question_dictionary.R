@@ -54,12 +54,6 @@ for (i in 1:length(Blocks)) {
   }
 }
 
-list_of_rows_to_df <- function(data) {
-  nCol <- max(vapply(data, length, 0))
-  data <- lapply(data, function(row) c(row, rep(NA, nCol-length(row))))
-  data <- matrix(unlist(data), nrow=length(data), ncol=nCol, byrow=TRUE)
-  data.frame(data)
-}
 
 data_dictionary <- list_of_rows_to_df(entries)
 colnames(data_dictionary) <- c("ResponseColumnName", "DataExportTag",
