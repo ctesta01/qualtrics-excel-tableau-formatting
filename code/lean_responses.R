@@ -136,16 +136,12 @@ for (i in 1:length(Blocks)) {
           for (m in 1:length(Blocks[[i]]$BlockElements[[j]]$Responses[[l]])) {
             e = e + 1
             r = Blocks[[i]]$BlockElements[[j]]$Responses[[l]][[m]]
-
             # make sure that subselector is defined
             if (is.null(Blocks[[i]]$BlockElements[[j]]$Payload$SubSelector)) {
               Blocks[[i]]$BlockElements[[j]]$Payload$SubSelector <- ""
             }
-
             response_coded <- code_response(Blocks[[i]]$BlockElements[[j]], l, r)
-
-            entry <- create_entry(i, j, k, l, m)
-            entries[[e]] <- entry
+            entries[[e]] <- create_entry(i, j, k, l, m)
           }
         }
       }
@@ -153,6 +149,7 @@ for (i in 1:length(Blocks)) {
   }
 }
 
+# entries are turned into a data frame with the specified headers
 lean_responses <- list_of_rows_to_df(entries)
 colnames(lean_responses) <- c("ResponseID", "ResponseColumnName", "DataExportTag",
 "QuestionText", "Block", "QuestionType", "QuestionType2",
