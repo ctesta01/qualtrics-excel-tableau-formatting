@@ -24,8 +24,15 @@ responsesfile = file.choose()
 survey = fromJSON(file=surveyfile)
 responses = read.csv(responsesfile, skip=2, header=F)
 responses2 = read.csv(responsesfile)
-names(responses) = names(responses2)
-rm(responses2)
+colnames(responses) = colnames(responses2)
+
+#
+columnlist <- names(responses)[grep('^V', names(responses))]
+likely_panel_columns <- sapply(unlist(responses2[1, columnlist],
+  use.names = FALSE), function(x) toString(x))
+
+colnames(responses)[colnames(responses) %in% columnlist] <- likely_panel_columns
+
 
 # some functions for later use
 percent <- function(x, digits = 1, format = "f", ...) {

@@ -94,7 +94,7 @@ code_response <- function (Question, l, r) {
 create_entry <- function(i, j, k, l, m) {
   return(c(
   # response id
-  toString(responses['V1'][m,1]),
+  toString(responses['ResponseID'][m,1]),
   # response column name
   colnames(Blocks[[i]]$BlockElements[[j]]$Responses)[[l]],
   # data export tag
