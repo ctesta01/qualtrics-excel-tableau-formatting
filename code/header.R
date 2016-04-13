@@ -13,7 +13,7 @@ if(.Platform$OS.type == "windows") {
     install.packages("installr");
     require(installr)
   }
-  install.pandoc()
+  if(!require(pandoc)) { install.pandoc() }
 }
 
 # loading survey and response data

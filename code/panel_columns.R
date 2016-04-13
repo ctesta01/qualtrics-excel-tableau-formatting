@@ -7,13 +7,13 @@
 question_to_panel_columns <- function(df, questionname) {
   # set the data frame to be the subset of the original data frame
   # that matches the questionname
-  df <- df[df$DataExportTag == questionname, ]
+  df <- df[df$ResponseColumnName == questionname, ]
 
   # check that the question name appears in the dataframe,
   # or in other words check that the dataframe restricted to the
   # specific question has a longer length than 0.
   if (nrow(df) == 0) {
-    error <- "DataExportTag XX for does not appear in the lean response data.
+    error <- "ResponseColumnName XX for does not appear in the lean response data.
     XX was going to be included in the panel data."
     error <- gsub("XX", questionname, error)
     stop(error)
@@ -29,8 +29,8 @@ question_to_panel_columns <- function(df, questionname) {
 
   # rename the columns so that the question text is included in the
   # panel data column headers
-  orig_questiontext <- paste0("Orig: ", questiontext)
-  coded_questiontext <- paste0("Coded: ", questiontext)
+  orig_questiontext <- paste0("Orig: ", questionname, ": ", questiontext)
+  coded_questiontext <- paste0("Coded: ", questionname, ": ", questiontext)
   colnames(df) <- c("ResponseID", orig_questiontext, coded_questiontext)
 
   return(df)
@@ -42,7 +42,7 @@ base_panel_data_from_csv <- function(df, columnlist) {
   # if the user doesn't define a columnlist,
   # set the default columnlist to include all the variable data columns
   # given by qualtrics that start with a "V"
-  if (missing(columnlist)) {
+  if (missing(columnlist) || length(columnlist) == 0) {
     columnlist <- likely_panel_columns
   }
   df <- df[,columnlist]
@@ -58,4 +58,13 @@ all_panel_questions <- function(df, questionlist) {
     panel_questions <- merge(x = panel_questions, y = question_to_panel_columns(df, questionlist[[i]]), by = "ResponseID", all = TRUE)
   }
   return(panel_questions)
+}
+
+### shorthand for use at OIRE
+panel_merging <- function(df, base_panel_columns, question_panel_columns) {
+  base_panel_data <- base_panel_data_from_csv(df, base_panel_columns)
+  question_panel_data <- all_panel_questions(df, question_panel_columns)
+  final_panel_data <- merge(x = base_panel_data, y = question_panel_data, by = "ResponseID", all = TRUE)
+  df <- merge(x = df, y = final_panel_data, by = "ResponseID", all = TRUE)
+  return(df)
 }
